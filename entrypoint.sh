@@ -51,6 +51,14 @@ su mimo -c "ttyd \
 FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"
 filebrowser --database "$FB_DB" > /tmp/filebrowser.log 2>&1 &
 
+# Replace code-server favicon with MiMo orange icon
+CS_MEDIA=$(find /usr/lib/code-server -path "*/media/favicon*" -type f 2>/dev/null | head -1)
+if [ -n "$CS_MEDIA" ]; then
+    CS_MEDIA_DIR=$(dirname "$CS_MEDIA")
+    cp /home/mimo/favicon.svg "$CS_MEDIA_DIR/favicon.svg" 2>/dev/null || true
+    cp /home/mimo/favicon.svg "$CS_MEDIA_DIR/favicon-dark-support.svg" 2>/dev/null || true
+fi
+
 # Start code-server in background (internal, no auth — gateway handles auth)
 su mimo -c "code-server \
     --bind-addr 127.0.0.1:8081 \
