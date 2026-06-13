@@ -92,9 +92,9 @@ docker compose -f docker-compose.mimocode.yml up --build -d
 # Создать группу с GID 2000 на хосте (если не существует)
 sudo groupadd -g 2000 workspace_users 2>/dev/null || true
 
-# Добавить пользователей
-sudo usermod -aG workspace_users sva
-sudo usermod -aG workspace_users goose
+# Добавить пользователей (замените на реальные имена)
+sudo usermod -aG workspace_users user1
+sudo usermod -aG workspace_users user2
 ```
 
 После этого перелогиниться или выполнить `newgrp workspace_users`.
