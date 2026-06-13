@@ -43,6 +43,7 @@ su mimo -c "ttyd \
     --port 7681 \
     --interface 127.0.0.1 \
     --base-path /tty \
+    --title 'MiMo-Code Terminal' \
     --writable \
     bash -l" > /tmp/ttyd.log 2>&1 &
 
@@ -55,6 +56,7 @@ su mimo -c "code-server \
     --bind-addr 127.0.0.1:8081 \
     --auth none \
     --disable-telemetry \
+    --app-name 'MiMo-Code' \
     /home/mimo/course" > /tmp/code-server.log 2>&1 &
 
 # Start auth gateway (single entry point on :8080)

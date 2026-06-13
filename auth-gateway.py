@@ -19,6 +19,7 @@ PASSWORD = os.environ.get("PASSWORD", "")
 SECRET = hmac.new(b"mimo-gateway", PASSWORD.encode(), hashlib.sha256).hexdigest()
 COOKIE_NAME = "mimo_session"
 LOGIN_PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "login.html")
+FAVICON = os.path.join(os.path.dirname(os.path.abspath(__file__)), "favicon.svg")
 
 BACKENDS = {
     "/ide/": ("127.0.0.1", 8081, True),
@@ -90,6 +91,20 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
     def route(self, method):
         path = self.path
 
+        if path == "/favicon.svg":
+            try:
+                with open(FAVICON, "rb") as f:
+                    data = f.read()
+                self.send_response(200)
+                self.send_header("Content-Type", "image/svg+xml")
+                self.send_header("Content-Length", str(len(data)))
+                self.send_header("Cache-Control", "public, max-age=86400")
+                self.end_headers()
+                self.wfile.write(data)
+            except FileNotFoundError:
+                self.send_error(404)
+            return
+
         if path == "/healthz":
             self.send_response(200)
             self.end_headers()
@@ -106,7 +121,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
         if method == "GET" and path in ("/", ""):
             if self.is_authenticated():
                 self.send_response(302)
-                self.send_header("Location", "/tty/")
+                self.send_header("Location", "/ide/")
                 self.end_headers()
                 return
             self._serve_login_page()
@@ -177,7 +192,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
                 "Set-Cookie",
                 f"{COOKIE_NAME}={token}; Path=/; HttpOnly; SameSite=Lax",
             )
-            self.send_header("Location", "/tty/")
+            self.send_header("Location", "/ide/")
             self.end_headers()
         else:
             self._serve_login_page(error=True)

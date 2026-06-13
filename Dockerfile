@@ -142,6 +142,7 @@ USER root
 # Auth gateway + login page
 COPY --chown=mimo:workspace_users auth-gateway.py /home/mimo/auth-gateway.py
 COPY --chown=mimo:workspace_users login.html /home/mimo/login.html
+COPY --chown=mimo:workspace_users favicon.svg /home/mimo/favicon.svg
 
 # Entrypoint
 COPY entrypoint.sh /entrypoint.sh
