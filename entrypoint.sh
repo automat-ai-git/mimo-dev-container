@@ -44,7 +44,7 @@ su mimo -c "ttyd \
     --interface 127.0.0.1 \
     --base-path /tty \
     -W \
-    bash -l" > /tmp/ttyd.log 2>&1 &
+    bash -c 'cd ~/course && exec bash -l'" > /tmp/ttyd.log 2>&1 &
 
 # Start File Browser in background
 FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"
