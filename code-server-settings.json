@@ -4,6 +4,8 @@
   "editor.minimap.enabled": false,
   "terminal.integrated.fontSize": 14,
   "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.enableOsc52": true,
+  "terminal.integrated.copyOnSelection": true,
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
   "workbench.startupEditor": "readme",
