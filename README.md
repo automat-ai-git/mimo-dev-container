@@ -1,31 +1,38 @@
-# MiMo-Code: Dev Container
+# MiMo-Code: контейнер рабочей среды курса
 
-Docker-контейнер с [MiMo-Code](https://github.com/XiaomiMiMo/MiMo-Code) — терминальным AI-ассистентом для кодинга от Xiaomi. Доступ через браузер с авторизацией.
+Docker-контейнер для курса с [MiMo-Code](https://github.com/XiaomiMiMo/MiMo-Code) — терминальным AI-ассистентом от Xiaomi. Каждый студент получает в браузере изолированную среду: VS Code, терминал с MiMo-Code CLI и файловый менеджер.
 
 ## Что внутри
 
-Один контейнер, два сервиса за общим порталом входа:
+Один контейнер, три сервиса за общим порталом входа:
 
 ```
 Браузер → :7682 (auth-gateway.py)
-              └─ /ide/ → code-server (VS Code в браузере)
-                              └─ терминал → mimo CLI
+              ├─ /ide/   → code-server (VS Code в браузере)
+              │               └─ терминал → mimo CLI
+              └─ /files/ → File Browser (файловый менеджер)
 ```
+
+Студент логинится один раз и получает доступ ко всему.
 
 ### Что установлено
 
-- **MiMo-Code CLI** (`mimo`) — AI-ассистент с агентами build/plan/compose, памятью между сессиями.
+- **MiMo-Code CLI** (`mimo`) — основной инструмент курса.
 - **MiMo Auto** — бесплатная модель от Xiaomi (настраивается при первом запуске).
-- **code-server** — VS Code в браузере (редактор + терминал).
-- **Docker-in-Docker** — доступ к Docker daemon хоста.
-- **Node.js 22, Python 3, build-essential** — базовый набор для разработки.
+- **19 Skills** — создание документов (DOCX, PPTX, XLSX, PDF), дизайн, автоматизация браузера и др.
+- **LibreOffice** — конвертация офисных форматов.
+- **Playwright + Chromium** — управление браузером из скриптов.
+- **Pandoc, Tesseract OCR, FFmpeg** — конвертация и обработка файлов.
+- **Python-библиотеки** — pandas, matplotlib, pdfplumber, reportlab, openpyxl и др.
+- **28 демо-проектов** — готовые примеры по всем 5 сессиям курса.
 
 ### Архитектура
 
 | Компонент | Порт | Описание |
 |-----------|------|----------|
-| auth-gateway.py | 7682 (внешний) → 8080 (внутренний) | Python-прокси с cookie-авторизацией |
+| auth-gateway.py | 7682 (внешний) → 8080 (внутренний) | Python-прокси с cookie-авторизацией, единая точка входа |
 | code-server | 8081 (внутренний) | VS Code в браузере, без собственной авторизации |
+| File Browser | 9090 (внутренний) | Файловый менеджер, noauth — авторизация через gateway |
 
 ## Быстрый старт
 
@@ -40,10 +47,7 @@ cp .env.example .env
 Узнать GID группы docker на вашем хосте и записать в `.env`:
 
 ```bash
-# Узнать DOCKER_GID
 stat -c '%g' /var/run/docker.sock
-
-# Записать в .env (замените 1001 на ваше значение)
 echo "DOCKER_GID=1001" >> .env
 ```
 
@@ -72,7 +76,7 @@ chmod +x run.sh
 http://localhost:7682
 ```
 
-Откроется VS Code. В терминале (Ctrl+`) наберите `mimo` — при первом запуске MiMo предложит интерактивную настройку (выбор провайдера, модели).
+Откроется VS Code с материалами курса. В терминале (Ctrl+`) наберите `mimo` для запуска MiMo-Code.
 
 ## Управление
 
@@ -80,11 +84,11 @@ http://localhost:7682
 # Остановить
 docker compose -f docker-compose.mimocode.yml down
 
+# Остановить и удалить данные студента
+docker compose -f docker-compose.mimocode.yml down -v
+
 # Логи
 docker compose -f docker-compose.mimocode.yml logs -f
-
-# Пересобрать
-docker compose -f docker-compose.mimocode.yml up --build -d
 ```
 
 ## Тома
@@ -101,17 +105,12 @@ docker compose -f docker-compose.mimocode.yml up --build -d
 Внутри контейнера файлы создаются от пользователя `mimo` (UID 1003, GID 2000). Чтобы несколько пользователей хоста могли читать и писать в `~/mimocode/home`, добавьте их в группу `workspace_users`:
 
 ```bash
-# Создать группу с GID 2000 на хосте (если не существует)
 sudo groupadd -g 2000 workspace_users 2>/dev/null || true
-
-# Добавить пользователей (замените на реальные имена)
 sudo usermod -aG workspace_users user1
 sudo usermod -aG workspace_users user2
 ```
 
 После этого перелогиниться или выполнить `newgrp workspace_users`.
-
-Контейнер при каждом старте выполняет `chmod -R g+rwX` на `.mimocode/`, поэтому новые файлы тоже будут доступны группе.
 
 ## Лицензия
 

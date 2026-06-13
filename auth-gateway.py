@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Auth gateway — single entry point with branded login for MiMo-Code.
 
-Sits on :8080, proxies to ttyd (:7681).
+Sits on :8080, proxies to code-server (:8081) and File Browser (:9090).
 Reads PASSWORD env var; if empty, skips auth entirely.
 """
 
@@ -22,6 +22,7 @@ LOGIN_PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "login.htm
 
 BACKENDS = {
     "/ide/": ("127.0.0.1", 8081, True),
+    "/files/": ("127.0.0.1", 9090, False),
 }
 
 PROXY_HOP_HEADERS = frozenset([

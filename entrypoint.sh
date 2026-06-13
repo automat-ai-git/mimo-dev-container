@@ -10,27 +10,38 @@ if [ -S /var/run/docker.sock ]; then
     usermod -aG "$HOST_DOCKER_GID" mimo
 fi
 
+# Initialize course directory from image if volume is empty (first run)
+if [ -d /home/mimo/.course-image ] && [ ! -f /home/mimo/course/.initialized ]; then
+    cp -a /home/mimo/.course-image/. /home/mimo/course/
+    touch /home/mimo/course/.initialized
+fi
+
 mkdir -p /home/mimo/.mimocode
 chown -R 1003:2000 /home/mimo/.mimocode
 chmod -R g+rwX /home/mimo/.mimocode
 
-# Welcome banner
+# Welcome banner in terminal
 cat >> /home/mimo/.bashrc << 'BANNER'
 
 echo ""
 echo -e "\033[1;33m  MiMo-Code: AI Coding Assistant by Xiaomi\033[0m"
 echo -e "\033[0;37m  ─────────────────────────────────────────\033[0m"
 echo -e "  Запустить MiMo-Code:  \033[1;32mmimo\033[0m"
-echo -e "  Рабочая директория:   \033[0;33m/workspace\033[0m"
+echo -e "  Первое демо:          \033[0;33mcd sessions/01-setup/demo/financial-dashboard\033[0m"
+echo -e "  Файловый менеджер:    \033[0;33m/files/\033[0m в адресной строке"
 echo ""
 BANNER
+
+# Start File Browser in background
+FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"
+filebrowser --database "$FB_DB" > /tmp/filebrowser.log 2>&1 &
 
 # Start code-server in background (internal, no auth — gateway handles auth)
 su mimo -c "code-server \
     --bind-addr 127.0.0.1:8081 \
     --auth none \
     --disable-telemetry \
-    /workspace" > /tmp/code-server.log 2>&1 &
+    /home/mimo/course" > /tmp/code-server.log 2>&1 &
 
 # Start auth gateway (single entry point on :8080)
 exec python3 /home/mimo/auth-gateway.py
