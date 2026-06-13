@@ -22,6 +22,7 @@ LOGIN_PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "login.htm
 
 BACKENDS = {
     "/ide/": ("127.0.0.1", 8081, True),
+    "/tty/": ("127.0.0.1", 7681, False),
     "/files/": ("127.0.0.1", 9090, False),
 }
 

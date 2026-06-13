@@ -51,6 +51,10 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
 # code-server (VS Code in browser)
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
+# ttyd — web terminal with OSC52 clipboard support
+RUN curl -fsSL -o /usr/local/bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 \
+    && chmod +x /usr/local/bin/ttyd
+
 # File Browser — lightweight web file manager
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 

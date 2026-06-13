@@ -32,10 +32,19 @@ echo -e "\033[1;33m  MiMo-Code: AI Coding Assistant by Xiaomi\033[0m"
 echo -e "\033[0;37m  ─────────────────────────────────────────\033[0m"
 echo -e "  Запустить MiMo-Code:  \033[1;32mmimo\033[0m"
 echo -e "  Первое демо:          \033[0;33mcd sessions/01-setup/demo/financial-dashboard\033[0m"
+echo -e "  Терминал (копирование):  \033[0;33m/tty/\033[0m в адресной строке"
 echo -e "  Файловый менеджер:    \033[0;33m/files/\033[0m в адресной строке"
 echo ""
 BANNER
 fi
+
+# Start ttyd in background (web terminal with clipboard support)
+su mimo -c "ttyd \
+    --port 7681 \
+    --interface 127.0.0.1 \
+    --base-path /tty \
+    --writable \
+    bash -l" > /tmp/ttyd.log 2>&1 &
 
 # Start File Browser in background
 FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"
