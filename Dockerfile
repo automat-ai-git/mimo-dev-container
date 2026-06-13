@@ -54,13 +54,13 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 # File Browser — lightweight web file manager
 RUN curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
 
-# MiMo-Code CLI
+# MiMo-Code CLI (OpenCode fork by Xiaomi)
 RUN npm install -g @mimo-ai/cli @mimo-ai/mimocode-linux-x64
 
-# npm packages used by Skills (docx/pptx generation, web bundling)
-RUN npm install -g docx pptxgenjs parcel @parcel/config-default html-inline mcp-searxng
+# npm packages for document generation
+RUN npm install -g docx pptxgenjs parcel @parcel/config-default html-inline
 
-# Python packages used by Skills
+# Python packages
 RUN pip3 install --no-cache-dir --break-system-packages \
     pypdf \
     python-pptx \
@@ -75,7 +75,6 @@ RUN pip3 install --no-cache-dir --break-system-packages \
     lxml \
     imageio \
     imageio-ffmpeg \
-    mcp \
     pdfplumber \
     reportlab \
     pdf2image \
@@ -95,8 +94,6 @@ RUN ln -sf /usr/bin/code-server /usr/local/bin/code
 RUN groupadd -g 2000 workspace_users 2>/dev/null || true && \
     useradd -u 1003 -g 2000 -m -s /bin/bash -G sudo mimo \
     && echo "mimo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/mimo
-
-# Add mimo to docker group
 RUN usermod -aG docker mimo 2>/dev/null || true
 
 USER mimo
@@ -125,14 +122,6 @@ COPY --chown=mimo:workspace_users code-server-settings.json /home/mimo/.local/sh
 COPY --chown=mimo:workspace_users course/ /home/mimo/.course-image/
 COPY --chown=mimo:workspace_users course/ /home/mimo/course/
 
-# MiMo-Code config
-RUN mkdir -p /home/mimo/.mimocode
-
-# Skills — available globally and in course root
-COPY --chown=mimo:workspace_users skills/ /home/mimo/.mimocode/skills/
-COPY --chown=mimo:workspace_users skills/ /home/mimo/.course-image/.mimocode/skills/
-COPY --chown=mimo:workspace_users skills/ /home/mimo/course/.mimocode/skills/
-
 # File Browser config
 RUN mkdir -p /home/mimo/.config/filebrowser
 RUN filebrowser config init --database /home/mimo/.config/filebrowser/filebrowser.db \
@@ -159,13 +148,11 @@ RUN mkdir -p /home/mimo/course/assets \
     && curl -fsSL https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js \
     -o /home/mimo/course/assets/chart.min.js || true
 
-# Pre-cache MCP packages
-RUN npx -y @anthropic-ai/mcp-server-filesystem --help 2>/dev/null || true
-
 # Port 8080 = auth gateway (single entry point)
 EXPOSE 8080
 
 ENV NODE_PATH="/usr/lib/node_modules"
 ENV PASSWORD=""
+ENV MIMOCODE_HOME=/home/mimo/.mimocode
 
 ENTRYPOINT ["dumb-init", "--", "/entrypoint.sh"]

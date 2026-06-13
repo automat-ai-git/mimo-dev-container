@@ -16,6 +16,7 @@ if [ -d /home/mimo/.course-image ] && [ ! -f /home/mimo/course/.initialized ]; t
     touch /home/mimo/course/.initialized
 fi
 
+# Prepare MiMo home (persisted via volume)
 mkdir -p /home/mimo/.mimocode
 chown -R 1003:2000 /home/mimo/.mimocode
 chmod -R g+rwX /home/mimo/.mimocode
@@ -31,6 +32,9 @@ echo -e "  Первое демо:          \033[0;33mcd sessions/01-setup/demo/f
 echo -e "  Файловый менеджер:    \033[0;33m/files/\033[0m в адресной строке"
 echo ""
 BANNER
+
+# Export MIMOCODE_HOME so mimo knows where to store config
+echo 'export MIMOCODE_HOME=/home/mimo/.mimocode' >> /home/mimo/.bashrc
 
 # Start File Browser in background
 FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"
