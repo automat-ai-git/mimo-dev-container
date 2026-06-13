@@ -43,8 +43,7 @@ su mimo -c "ttyd \
     --port 7681 \
     --interface 127.0.0.1 \
     --base-path /tty \
-    --title 'MiMo-Code Terminal' \
-    --writable \
+    -W \
     bash -l" > /tmp/ttyd.log 2>&1 &
 
 # Start File Browser in background
