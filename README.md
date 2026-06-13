@@ -31,7 +31,7 @@ Docker-контейнер с [MiMo-Code](https://github.com/XiaomiMiMo/MiMo-Code
 ### 1. Клонировать и настроить
 
 ```bash
-git clone https://github.com/tdiz/mimo-dev-container.git
+git clone https://github.com/automat-ai-git/mimo-dev-container.git
 cd mimo-dev-container
 cp .env.example .env
 ```
@@ -81,8 +81,25 @@ docker compose -f docker-compose.mimocode.yml up --build -d
 |-----|-----------|
 | `~/workspace` | Рабочая директория (общая с хостом) |
 | `~/mimocode/home` | Конфиг и память MiMo (`.mimocode/`) |
-| `~/` | Домашняя директория хоста (read-only) |
+| `~/` | Домашняя директория хоста |
 | `docker.sock` | Доступ к Docker daemon хоста |
+
+## Доступ к файлам MiMo снаружи контейнера
+
+Внутри контейнера файлы создаются от пользователя `mimo` (UID 1003, GID 2000). Чтобы несколько пользователей хоста могли читать и писать в `~/mimocode/home`, добавьте их в группу `workspace_users`:
+
+```bash
+# Создать группу с GID 2000 на хосте (если не существует)
+sudo groupadd -g 2000 workspace_users 2>/dev/null || true
+
+# Добавить пользователей
+sudo usermod -aG workspace_users sva
+sudo usermod -aG workspace_users goose
+```
+
+После этого перелогиниться или выполнить `newgrp workspace_users`.
+
+Контейнер при каждом старте выполняет `chmod -R g+rwX` на `.mimocode/`, поэтому новые файлы тоже будут доступны группе.
 
 ## Лицензия
 
