@@ -126,6 +126,9 @@ COPY --chown=mimo:workspace_users code-server-settings.json /home/mimo/.local/sh
 COPY --chown=mimo:workspace_users course/ /home/mimo/.course-image/
 COPY --chown=mimo:workspace_users course/ /home/mimo/course/
 
+# Skills as reference materials for MiMo (read-only knowledge base)
+COPY --chown=mimo:workspace_users skills/ /home/mimo/course/skills/
+
 # File Browser config
 RUN mkdir -p /home/mimo/.config/filebrowser
 RUN filebrowser config init --database /home/mimo/.config/filebrowser/filebrowser.db \
