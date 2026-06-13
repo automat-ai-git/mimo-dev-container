@@ -21,8 +21,11 @@ mkdir -p /home/mimo/.mimocode
 chown -R 1003:2000 /home/mimo/.mimocode
 chmod -R g+rwX /home/mimo/.mimocode
 
-# Welcome banner in terminal
-cat >> /home/mimo/.bashrc << 'BANNER'
+# Write banner and env ONCE (guard against duplicate appends on restart)
+if ! grep -q "MIMOCODE_HOME" /home/mimo/.bashrc 2>/dev/null; then
+    cat >> /home/mimo/.bashrc << 'BANNER'
+
+export MIMOCODE_HOME=/home/mimo/.mimocode
 
 echo ""
 echo -e "\033[1;33m  MiMo-Code: AI Coding Assistant by Xiaomi\033[0m"
@@ -32,9 +35,7 @@ echo -e "  Первое демо:          \033[0;33mcd sessions/01-setup/demo/f
 echo -e "  Файловый менеджер:    \033[0;33m/files/\033[0m в адресной строке"
 echo ""
 BANNER
-
-# Export MIMOCODE_HOME so mimo knows where to store config
-echo 'export MIMOCODE_HOME=/home/mimo/.mimocode' >> /home/mimo/.bashrc
+fi
 
 # Start File Browser in background
 FB_DB="/home/mimo/.config/filebrowser/filebrowser.db"

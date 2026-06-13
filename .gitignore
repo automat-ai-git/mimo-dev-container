@@ -12,7 +12,6 @@
 *.secret
 *credentials*
 *token*
-!.env.example
 
 # MiMo локальное состояние и конфиг с ключами
 home/

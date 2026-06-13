@@ -19,7 +19,6 @@ Docker-контейнер для курса с [MiMo-Code](https://github.com/Xi
 
 - **MiMo-Code CLI** (`mimo`) — основной инструмент курса.
 - **MiMo Auto** — бесплатная модель от Xiaomi (настраивается при первом запуске).
-- **19 Skills** — создание документов (DOCX, PPTX, XLSX, PDF), дизайн, автоматизация браузера и др.
 - **LibreOffice** — конвертация офисных форматов.
 - **Playwright + Chromium** — управление браузером из скриптов.
 - **Pandoc, Tesseract OCR, FFmpeg** — конвертация и обработка файлов.

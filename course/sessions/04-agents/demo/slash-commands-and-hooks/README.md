@@ -28,13 +28,13 @@ slash-commands-and-hooks/
 
 ### Что объясняем
 
-Slash-команды — это markdown-файлы в папке `.mimocode/commands/`. Каждый файл — один промпт. Имя файла (без .md) — имя команды. Студент вводит `/weekly-report` в MiMo-Code, и Claude выполняет инструкции из файла.
+Slash-команды — это markdown-файлы в папке `.mimocode/commands/`. Каждый файл — один промпт. Имя файла (без .md) — имя команды. Студент вводит `/weekly-report` в MiMo-Code, и mimo выполняет инструкции из файла.
 
 ### Что показываем
 
 1. Откройте файл `.mimocode/commands/weekly-report.md` и покажите содержимое
-2. Объясните структуру: это обычный текст с инструкциями для Claude
-3. Обратите внимание: команда ссылается на файлы из других демо этого занятия (quarterly-results.csv, meeting-transcript.md). При вызове Claude найдёт и обработает эти файлы.
+2. Объясните структуру: это обычный текст с инструкциями для mimo
+3. Обратите внимание: команда ссылается на файлы из других демо этого занятия (quarterly-results.csv, meeting-transcript.md). При вызове mimo найдёт и обработает эти файлы.
 4. Покажите вторую команду — `client-brief.md`. В ней используется `$ARGUMENTS` для передачи аргументов, а данные берутся из evaluation-data.csv (360-оценка) и meeting-transcript.md
 
 ### Как использовать
@@ -106,7 +106,7 @@ Hooks — автоматические действия, которые MiMo-Cod
   "matcher": "Bash",
   "hooks": [{
     "type": "command",
-    "command": "if echo \"$CC_TOOL_INPUT_COMMAND\" | grep -qE 'rm\\s+-rf|sudo|chmod 777'; then echo 'BLOCK: опасная команда заблокирована'; exit 1; fi"
+    "command": "if echo \"$MIMO_TOOL_INPUT_COMMAND\" | grep -qE 'rm\\s+-rf|sudo|chmod 777'; then echo 'BLOCK: опасная команда заблокирована'; exit 1; fi"
   }]
 }
 ```
@@ -118,7 +118,7 @@ Hooks — автоматические действия, которые MiMo-Cod
   "matcher": "Write|Edit",
   "hooks": [{
     "type": "command",
-    "command": "if echo \"$CC_TOOL_RESULT_FILE_PATH\" | grep -q '\\.csv$'; then head -1 \"$CC_TOOL_RESULT_FILE_PATH\" | awk -F',' '{print \"CSV: \" NF \" columns\"}'; fi"
+    "command": "if echo \"$MIMO_TOOL_RESULT_FILE_PATH\" | grep -q '\\.csv$'; then head -1 \"$MIMO_TOOL_RESULT_FILE_PATH\" | awk -F',' '{print \"CSV: \" NF \" columns\"}'; fi"
   }]
 }
 ```
@@ -131,7 +131,7 @@ macOS:
 {
   "hooks": [{
     "type": "command",
-    "command": "osascript -e 'display notification \"$CC_NOTIFICATION_MESSAGE\" with title \"MiMo-Code\"'"
+    "command": "osascript -e 'display notification \"$MIMO_NOTIFICATION_MESSAGE\" with title \"MiMo-Code\"'"
   }]
 }
 ```
@@ -141,18 +141,18 @@ Linux (альтернатива для участников с Linux):
 {
   "hooks": [{
     "type": "command",
-    "command": "notify-send 'MiMo-Code' \"$CC_NOTIFICATION_MESSAGE\""
+    "command": "notify-send 'MiMo-Code' \"$MIMO_NOTIFICATION_MESSAGE\""
   }]
 }
 ```
 
-Когда MiMo-Code завершает задачу, система покажет уведомление. Полезно, если Claude работает в фоне. В файле settings.json настроен вариант для macOS. Участники с Linux могут заменить `osascript` на `notify-send` (пакет libnotify, обычно предустановлен в Ubuntu/Fedora).
+Когда MiMo-Code завершает задачу, система покажет уведомление. Полезно, если mimo работает в фоне. В файле settings.json настроен вариант для macOS. Участники с Linux могут заменить `osascript` на `notify-send` (пакет libnotify, обычно предустановлен в Ubuntu/Fedora).
 
 ### Переменные окружения для хуков
 
-- `$CC_TOOL_INPUT_COMMAND` — текст команды (для Bash)
-- `$CC_TOOL_RESULT_FILE_PATH` — путь к файлу (для Write/Edit)
-- `$CC_NOTIFICATION_MESSAGE` — текст уведомления
+- `$MIMO_TOOL_INPUT_COMMAND` — текст команды (для Bash)
+- `$MIMO_TOOL_RESULT_FILE_PATH` — путь к файлу (для Write/Edit)
+- `$MIMO_NOTIFICATION_MESSAGE` — текст уведомления
 
 ### Практическое задание для студентов
 
@@ -168,4 +168,4 @@ Linux (альтернатива для участников с Linux):
 
 **Hook блокирует нужные команды.** Например, хук на `rm -rf` заблокирует и `rm -rf temp/` (безобидная очистка). Хуки нужно настраивать аккуратно.
 
-**На Windows/Linux osascript не работает.** Уведомление через osascript — только macOS. На Linux используйте `notify-send` (пример выше). На Windows — `powershell -Command "New-BurntToastNotification -Text 'MiMo-Code', '$CC_NOTIFICATION_MESSAGE'"` (требует модуль BurntToast).
+**На Windows/Linux osascript не работает.** Уведомление через osascript — только macOS. На Linux используйте `notify-send` (пример выше). На Windows — `powershell -Command "New-BurntToastNotification -Text 'MiMo-Code', '$MIMO_NOTIFICATION_MESSAGE'"` (требует модуль BurntToast).

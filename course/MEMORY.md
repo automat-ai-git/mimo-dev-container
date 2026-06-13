@@ -1,6 +1,6 @@
 # MEMORY.md
 
-This file provides guidance to MiMo-Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to MiMo-Code (github.com/XiaomiMiMo/MiMo-Code) when working with code in this repository.
 
 ## Project overview
 
@@ -49,7 +49,7 @@ All content is in Russian. When generating or editing text for this project:
 
 ## Key context
 
-- The course uses GLM-5 as the primary AI provider (included in course price), with Claude Pro/Max and alternatives (Kimi, OpenRouter) as options
+- The course uses GLM-5 as the primary AI provider (included in course price), with mimo Pro/Max and alternatives (Kimi, OpenRouter) as options
 - Target audience: entrepreneurs, managers, analysts, marketers — no programming experience required
 - The previous Automatica course (n8n 2.0) PDF serves as a template for landing page structure and visual style
 - Pricing: 29,000 ₽ early bird / 39,000 ₽ regular / 49,000 ₽ corporate
