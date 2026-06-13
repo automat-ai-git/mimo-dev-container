@@ -36,6 +36,16 @@ cd mimo-dev-container
 cp .env.example .env
 ```
 
+Узнать GID группы docker на вашем хосте и записать в `.env`:
+
+```bash
+# Узнать DOCKER_GID
+stat -c '%g' /var/run/docker.sock
+
+# Записать в .env (замените 1001 на ваше значение)
+echo "DOCKER_GID=1001" >> .env
+```
+
 Опционально — задать пароль в `.env`:
 
 ```env
@@ -48,9 +58,10 @@ PASSWORD=my-secret-password
 docker network create localai_default
 ```
 
-### 3. Собрать и запустить
+### 3. Сделать run.sh исполняемым, собрать и запустить
 
 ```bash
+chmod +x run.sh
 ./run.sh
 ```
 
