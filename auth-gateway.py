@@ -106,7 +106,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
         if method == "GET" and path in ("/", ""):
             if self.is_authenticated():
                 self.send_response(302)
-                self.send_header("Location", "/ide/")
+                self.send_header("Location", "/tty/")
                 self.end_headers()
                 return
             self._serve_login_page()
@@ -177,7 +177,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
                 "Set-Cookie",
                 f"{COOKIE_NAME}={token}; Path=/; HttpOnly; SameSite=Lax",
             )
-            self.send_header("Location", "/ide/")
+            self.send_header("Location", "/tty/")
             self.end_headers()
         else:
             self._serve_login_page(error=True)
