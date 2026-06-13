@@ -21,7 +21,7 @@ COOKIE_NAME = "mimo_session"
 LOGIN_PAGE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "login.html")
 
 BACKENDS = {
-    "/terminal/": ("127.0.0.1", 7681, False),
+    "/ide/": ("127.0.0.1", 8081, True),
 }
 
 PROXY_HOP_HEADERS = frozenset([
@@ -104,7 +104,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
         if method == "GET" and path in ("/", ""):
             if self.is_authenticated():
                 self.send_response(302)
-                self.send_header("Location", "/terminal/")
+                self.send_header("Location", "/ide/")
                 self.end_headers()
                 return
             self._serve_login_page()
@@ -175,7 +175,7 @@ class GatewayHandler(http.server.BaseHTTPRequestHandler):
                 "Set-Cookie",
                 f"{COOKIE_NAME}={token}; Path=/; HttpOnly; SameSite=Lax",
             )
-            self.send_header("Location", "/terminal/")
+            self.send_header("Location", "/ide/")
             self.end_headers()
         else:
             self._serve_login_page(error=True)

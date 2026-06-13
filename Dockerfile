@@ -33,9 +33,11 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# ttyd (web terminal with OSC52 clipboard support)
-RUN curl -fsSL -o /usr/local/bin/ttyd https://github.com/tsl0922/ttyd/releases/download/1.7.7/ttyd.x86_64 \
-    && chmod +x /usr/local/bin/ttyd
+# code-server (VS Code in browser)
+RUN curl -fsSL https://code-server.dev/install.sh | sh
+
+# symlink code -> code-server (mimo может вызывать `code`)
+RUN ln -sf /usr/bin/code-server /usr/local/bin/code
 
 # Create user
 RUN groupadd -g 2000 workspace_users 2>/dev/null || true && \
@@ -43,6 +45,18 @@ RUN groupadd -g 2000 workspace_users 2>/dev/null || true && \
 
 # MiMo-Code CLI
 RUN npm install -g @mimo-ai/cli @mimo-ai/mimocode-linux-x64
+
+# code-server settings
+USER mimo
+RUN mkdir -p /home/mimo/.local/share/code-server/User
+COPY --chown=mimo:workspace_users code-server-settings.json /home/mimo/.local/share/code-server/User/settings.json
+
+# Git defaults
+RUN git config --global user.name "MiMo User" \
+    && git config --global user.email "user@mimo.local" \
+    && git config --global init.defaultBranch main
+
+USER root
 
 # Auth gateway + login page
 COPY --chown=mimo:workspace_users auth-gateway.py /home/mimo/auth-gateway.py

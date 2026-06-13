@@ -25,8 +25,12 @@ echo -e "  Рабочая директория:   \033[0;33m/workspace\033[0m"
 echo ""
 BANNER
 
-# Start ttyd in background — auto-launches mimo on connect (as in working config)
-su mimo -c "ttyd -W -p 7681 bash -lc 'cd /workspace && mimo'" &
+# Start code-server in background (internal, no auth — gateway handles auth)
+su mimo -c "code-server \
+    --bind-addr 127.0.0.1:8081 \
+    --auth none \
+    --disable-telemetry \
+    /workspace" > /tmp/code-server.log 2>&1 &
 
 # Start auth gateway (single entry point on :8080)
 exec python3 /home/mimo/auth-gateway.py
