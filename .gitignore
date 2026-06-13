@@ -1,21 +1,57 @@
-# Секреты
+# =============================================
+# Секреты — НИКОГДА не коммитить
+# =============================================
 .env
 *.env
 !.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.secret
+*credentials*
+*token*
+!.env.example
+
+# MiMo локальное состояние и конфиг с ключами
+home/
+.mimocode/
+mimocode.json
+
+# Claude Code local state (не относится к этому проекту)
+.claude/
 
 # Docker override
 docker-compose.override.yml
 
-# macOS
+# OS
 .DS_Store
-
-# Windows
 Thumbs.db
+Desktop.ini
+ehthumbs.db
 
-# Editors
+# Editors / IDE
 .vscode/
 .idea/
 *.swp
+*.swo
+*~
+*.bak
+*.tmp
 
-# MiMo local state
-home/
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Logs
+*.log
+logs/

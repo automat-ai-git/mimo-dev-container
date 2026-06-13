@@ -11,13 +11,14 @@ services:
     restart: unless-stopped
     stdin_open: true
     tty: true
+    # stdin_open + tty обязательны для интерактивного ttyd
     group_add:
       - "${DOCKER_GID:-999}"
       - "2000"
     networks:
       - localai_default
     ports:
-      - "7682:7681"
+      - "7682:8080"
     volumes:
       - ${HOME}/workspace:/workspace
       - ${HOME}/mimocode/home:/home/mimo/.mimocode
@@ -27,3 +28,9 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - HOME=/home/mimo
       - MIMOCODE_HOME=/home/mimo/.mimocode
+      - PASSWORD=${PASSWORD:-}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
