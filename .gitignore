@@ -1,0 +1,21 @@
+# Секреты
+.env
+*.env
+!.env.example
+
+# Docker override
+docker-compose.override.yml
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# MiMo local state
+home/

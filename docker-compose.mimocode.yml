@@ -1,0 +1,29 @@
+networks:
+  localai_default:
+    external: true
+
+services:
+  mimocode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mimocode
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    group_add:
+      - "${DOCKER_GID:-999}"
+      - "2000"
+    networks:
+      - localai_default
+    ports:
+      - "7682:7681"
+    volumes:
+      - ${HOME}/workspace:/workspace
+      - ${HOME}/mimocode/home:/home/mimo/.mimocode
+      - ${HOME}:/home/user/host_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - HOME=/home/mimo
+      - MIMOCODE_HOME=/home/mimo/.mimocode
