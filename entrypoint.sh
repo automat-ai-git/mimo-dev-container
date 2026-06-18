@@ -16,6 +16,10 @@ if [ -d /home/mimo/.course-image ] && [ ! -f /home/mimo/course/.initialized ]; t
     touch /home/mimo/course/.initialized
 fi
 
+# Virtual framebuffer for MiMo clipboard (xclip needs DISPLAY)
+Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+export DISPLAY=:99.0
+
 # Prepare MiMo home (persisted via volume)
 mkdir -p /home/mimo/.mimocode
 chown -R 1003:2000 /home/mimo/.mimocode
@@ -26,6 +30,7 @@ if ! grep -q "MIMOCODE_HOME" /home/mimo/.bashrc 2>/dev/null; then
     cat >> /home/mimo/.bashrc << 'BANNER'
 
 export MIMOCODE_HOME=/home/mimo/.mimocode
+export DISPLAY=:99.0
 
 echo ""
 echo -e "\033[1;33m  MiMo-Code: AI Coding Assistant by Xiaomi\033[0m"

@@ -40,6 +40,8 @@ RUN apt-get update && apt-get install -y \
     ripgrep \
     fd-find \
     sqlite3 \
+    xvfb \
+    xclip \
     && rm -rf /var/lib/apt/lists/* \
     && ln -s /usr/bin/python3 /usr/bin/python
 
