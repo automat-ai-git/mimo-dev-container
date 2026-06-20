@@ -23,6 +23,7 @@ services:
       - ${HOME}/mimocode/home:/home/mimo/.mimocode
       - ${HOME}:/home/user/host_home
       - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/e/meeting-data:/meeting-data:ro
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - HOME=/home/mimo
